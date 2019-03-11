@@ -1,7 +1,7 @@
 Chris,D,100
 test,D,0
 erg,D,1
-Chris,D,105
+Chris,D,25
 rg,D,0
 fbtg,D,4
 test5,D,500
@@ -12,4 +12,9 @@ frtbh,D,200
 fgmrn,D,20
 fdsgrzrtjhf,D,5020
 dgrbfhxcfb,D,666
-TRUMP,D,1e+49
+TRUMP,D,100000000
+Chris,D,50
+Chris,W,10
+Chris,D,5
+Chris,D,500
+Chris,W,100

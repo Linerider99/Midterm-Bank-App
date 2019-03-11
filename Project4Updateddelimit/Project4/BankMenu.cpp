@@ -4,8 +4,9 @@
 #include "BankMenu.h"
 #include "AccountMenu.h"
 #include <string>
-#include <string>
-
+#include <stdlib.h>
+#include <iomanip> // setprecision
+#include <sstream> // stringstream
 #include <map> 
 
 struct accInfo
@@ -156,113 +157,114 @@ void BankMenu::NewAccount()
 
 }
 
-
-
 void BankMenu::ListAccounts()
-{
+{	
+	std::ifstream loginFile("Login.txt");
+	loginFile.open("Login.txt");
+	loginFile.clear();
+	loginFile.seekg(0, ios::beg);
 
-	
 	std::ifstream accountFile("Account.txt");
 	accountFile.open("Account.txt");
-
 	accountFile.clear();
 	accountFile.seekg(0, ios::beg);
 	//if i dont add this, i have to go through the search twice before it shows what im looking for
 	
-	accInfo temp;
+	accInfo accounttemp;
+	accInfo logintemp;
 	system("cls");
 	cout << "\nList of all current accounts\n\n";
 
-	std::map<string, double> balances;
-	std::map<string, double>::iterator it;
+	map<string, string> balances;
+	map<string, string>::iterator it;
 	double bal_holder = 0;
 
-	if (accountFile.is_open())
+	if (accountFile.is_open() && loginFile.is_open())
 	{
-		while (!accountFile.eof())
-		{
-			(std::getline(accountFile, temp.user, ',') &&
-			 std::getline(accountFile, temp.trantype, ',') &&
-			 std::getline(accountFile, temp.bal));
-			cout << temp.user << endl;
-
-			// find value given key
-			it = balances.find(temp.user);
-			if (it != balances.end())
-			{
-				if (temp.trantype == "D")
-				{
-					temp.bal = std::stod(temp.bal) + it->second;
-					cout << temp.bal;
-					cout << std::stod (temp.bal);
-					system("pause");
-
-
-					balances.insert(std::pair<string, double>(temp.user, std::stod(temp.bal)));
-				}
-				if (temp.trantype == "W")
-				{
-					temp.bal = std::stod(temp.bal) - it->second;
-					balances.insert(std::pair<string, double>(temp.user, std::stod(temp.bal)));
-				}
-			}
-			else
-			{
-				balances.insert(std::pair<string, double>(temp.user, std::stod(temp.bal)));
-			}
-
-
-
-		}
-	}
-	cout << "\n";
-
-	
-	
-	int showmore = -1;
-	while (showmore < 0)
-	{
-		cout << "\nShow Balances?\n1. Yes\n2. No\n";
-		cin >> showmore;
-		if (cin.fail())
-		{
-			cin.clear();
-			cin.ignore();
-			cout << "Invalid Option" << endl;
-			showmore = -1;
-		}
-		if (showmore < 0 || showmore > 2)
-		{
-			cin.clear();
-			cin.ignore();
-			cout << "Invalid Option" << endl;
-			showmore = -1;
-		}
-	}
-	
-
-	if (showmore == 1)
-	{
-
-		accountFile.clear();
-		accountFile.seekg(0, ios::beg);
-		//if i dont add this, i have to go through the search twice before it shows what im looking for
-		system("cls");
-		cout << "\nList of all current accounts\n\n";
-
-		if (accountFile.is_open())
-		{
 			while (!accountFile.eof())
 			{
-				(std::getline(accountFile, temp.user, ',') &&
-					std::getline(accountFile, temp.trantype, ',') &&
-					std::getline(accountFile, (temp.bal)));
+				(std::getline(accountFile, accounttemp.user, ',') &&
+					std::getline(accountFile, accounttemp.trantype, ',') &&
+					std::getline(accountFile, (accounttemp.bal)));
+				if (!loginFile.eof())
+				{
+					(std::getline(loginFile, logintemp.user, ',') &&
+						std::getline(loginFile, (logintemp.pass)));
+					cout << logintemp.user << endl;
+				}
 
-				cout << temp.user << "\t $" << temp.bal << endl;
+				//http://www.cplusplus.com/reference/map/map/find/
+				// find value given key
+				it = balances.find(accounttemp.user);
+				if (it != balances.end())
+				{
+					double holder = 0;
+					if (accounttemp.trantype == "D")
+					{
+						holder = std::stod(accounttemp.bal) + std::stod(balances.find(accounttemp.user)->second);
+					}
+					if (accounttemp.trantype == "W")
+					{
+						holder = std::stod(balances.find(accounttemp.user)->second) - std::stod(accounttemp.bal);
+					}
+					stringstream stream;
+					stream << fixed << setprecision(2) << holder;
+					string s = stream.str();
+					accounttemp.bal = s;
+					it->second = accounttemp.bal;
+				}
+				else
+				{
+					balances.insert(std::pair<string, string>(accounttemp.user, (accounttemp.bal)));
+				}
+
+
+
 			}
 		}
 		cout << "\n";
-		system("pause");
+
+
+
+		int showmore = -1;
+		while (showmore < 0)
+		{
+			cout << "\nShow Balances?\n1. Yes\n2. No\n";
+			cin >> showmore;
+			if (cin.fail())
+			{
+				cin.clear();
+				cin.ignore();
+				cout << "Invalid Option" << endl;
+				showmore = -1;
+			}
+			if (showmore < 0 || showmore > 2)
+			{
+				cin.clear();
+				cin.ignore();
+				cout << "Invalid Option" << endl;
+				showmore = -1;
+			}
+		}
+
+
+		if (showmore == 1)
+		{
+
+			system("cls");
+			cout << "\nList of all current accounts\n\n";
+
+
+			for (it = balances.begin(); it != balances.end(); it++)
+			{
+				std::cout << it->first  // string (key)
+					<< "\t $"
+					<< fixed << setprecision(2) << it->second   // string's value 
+					<< std::endl;
+			}
+			cout << "\n";
+			system("pause");
 	}
+	loginFile.close();
 	accountFile.close();
 }
