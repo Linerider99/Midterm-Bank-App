@@ -1,0 +1,13 @@
+﻿  BankMenu.cpp
+c:\users\game\desktop\new folder (2)\project4updateddelimit\project4\bankmenu.cpp(70): warning C4101: 'offset': unreferenced local variable
+c:\users\game\desktop\new folder (2)\project4updateddelimit\project4\bankmenu.cpp(195): warning C4244: 'argument': conversion from 'double' to 'const _Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+c:\users\game\desktop\new folder (2)\project4updateddelimit\project4\bankmenu.cpp(205): warning C4244: 'argument': conversion from 'double' to 'const _Elem', possible loss of data
+          with
+          [
+              _Elem=char
+          ]
+  Project4.vcxproj -> C:\Users\Game\Desktop\New folder (2)\Project4Updateddelimit\Debug\Project4.exe
